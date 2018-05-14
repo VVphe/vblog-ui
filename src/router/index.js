@@ -6,6 +6,7 @@ import ArticleShowPage from '../components/ArticleShowPage'
 import AboutmePage from '../components/AboutmePage'
 import OutlinePage from '../components/OutlinePage'
 import ArticleListPage from '../components/ArticleListPage'
+import EditPage from '../components/EditPage'
 
 Vue.use(Router)
 
@@ -35,6 +36,11 @@ export default new Router({
       path: '/articlelist',
       name: 'ArticleListPage',
       component: ArticleListPage
+    },
+    {
+      path: '/edit',
+      name: 'EditPage',
+      component: EditPage
     }
   ]
 })

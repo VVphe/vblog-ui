@@ -59,6 +59,10 @@
                 </div>
             </div>
         </div>
+
+        <div class="addArticle" @click="goEditArticle">
+            <button type="button" class="btn btn-primary btn-lg dim btn-circle btn-outline"  ><i class="fa fa-edit"></i></button>
+        </div>
     </div>
 </template>
 
@@ -132,6 +136,9 @@ export default {
       goThisArticle: function(articleid) {
          this.$router.push({name: 'ArticleShowPage', params: {articleid: articleid}})
       },
+      goEditArticle: function() {
+          this.$router.push({name: 'EditPage'})
+      }
       
   },
   mounted() {
@@ -142,4 +149,9 @@ export default {
 </script>
 
 <style scoped>
+.addArticle {
+    position: fixed;
+    bottom: 40px;
+    right: 10px;
+}
 </style>

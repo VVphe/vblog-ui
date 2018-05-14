@@ -9,7 +9,10 @@ import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
 
+import util from './util'
+
 Vue.use(VueResource) 
+Vue.use(util)
 
 Vue.component('eChart', ECharts)
 
