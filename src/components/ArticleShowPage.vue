@@ -21,8 +21,8 @@
                                 <div class="col-md-6">
                                     <div class="small text-right">
                                         <h5>Stats:</h5>
-                                        <div> <i class="fa fa-comments-o"> </i> {{article.commentsCnt}} </div>
-                                        <i class="fa fa-eye"> </i> 144 views
+                                        <div> <i class="fa fa-comments-o"> </i> {{article.commentsCnt}} comments</div>
+                                        <i class="fa fa-eye"> </i> {{article.readcount}} views
                                     </div>
                                 </div>
                             </div>
@@ -31,12 +31,29 @@
                                 <div class="col-lg-12">
 
                                     <h2>Comments:</h2>
-                                    <div class="social-feed-box" v-if="comments.length === 0">
-                                        <div class="social-body">
-                                            <p>
-                                                还没有评论,快来评论吧！
-                                            </p>
+                                    <!-- <div class="social-feed-box" v-if="comments.length !== 0" v-model="myComment"> -->
+                                    <div v-if="comments.length !== 0">
+                                        <textarea class="form-control" placeholder="请发表你的评论！" v-model="myComment">
+                                                    
+                                        </textarea>
+                                        <br>
+                                        <div class="text-right">
+                                            <button type="submit" class="btn btn-sm btn-primary m-t-n-xs" @click="publishComment"><strong>发表评论</strong></button>
                                         </div>
+                                        <br>
+                                    </div>
+                                    <!-- </div> -->
+                                    <div v-if="comments.length === 0">
+                                       
+                                            <textarea class="form-control" placeholder="还没有评论,快来评论吧！" v-model="myComment">
+                                                
+                                            </textarea>
+                                            <br>
+                                            <div class="text-right">
+                                                <button type="submit" class="btn btn-sm btn-primary m-t-n-xs" @click="publishComment"><strong>发表评论</strong></button>
+                                            </div>
+                                            <br>
+                                       
                                     </div>
                                     <div class="social-feed-box" v-for="comment in comments">
                                         <div class="social-avatar">
@@ -51,18 +68,71 @@
                                             <p>
                                                 {{comment.cmcontent}}
                                             </p>
+
+                                            <a @click="goCommentReply(comment)">
+                                                回复
+                                            </a>
                                         </div>
+                                        <hr>
+                                        <div v-if="replyid === comment.cmid">
+                                            <textarea  style="background-color: #e7eaec" class="form-control" placeholder="请输入你的回复" v-model="myReply">
+                                                                    
+                                            </textarea>
+                                            <br>
+                                            <div class="text-right">
+                                                <button type="submit" class="btn btn-sm btn-default m-t-n-xs" @click="cancelReply"><strong>取消</strong></button>
+                                                <button type="submit" class="btn btn-sm btn-primary m-t-n-xs" @click="reply"><strong>发表回复</strong></button>
+                                            </div>
+                                            <br>
+                                        </div>
+                                        <div>
+                                            <div class="social-feed-box col-lg-offset-1" v-for="reply in replies[comment.cmid]" @click="goReplyReply(comment, reply)">
+                                                <div class="social-avatar">
+                                                    <div class="media-body">
+                                                        <a href="#">
+                                                            {{reply.fromuser}} 回复 {{reply.touser}}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="social-body">
+                                                    <p>
+                                                        {{reply.replycontent}}
+                                                    </p>
+                                                </div>
+                                                <div v-if="replyid === reply.id">
+                                                    <textarea  style="background-color: #e7eaec" class="form-control" placeholder="请输入你的回复" v-model="myReply">
+                                                                            
+                                                    </textarea>
+                                                    <br>
+                                                    <div class="text-right">
+                                                        <button type="submit" class="btn btn-sm btn-default m-t-n-xs" @click.stop="cancelReply"><strong>取消</strong></button>
+                                                        <button type="submit" class="btn btn-sm btn-primary m-t-n-xs" @click.stop="replyReply"><strong>发表回复</strong></button>
+                                                    </div>
+                                                    <br>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
                                     </div>
+           
+                                   
 
                                 </div>
+                                <div class="col-lg-12 ">
+                                    <button class="btn btn-primary btn-block" :class="{'disabled': disabled}" @click="showMore">
+                                        <i class="fa fa-arrow-down"></i> Show More
+                                    </button>
+                                </div>
+                                
+                                
                             </div>
-
 
                         </div>
                     </div>
+
+                    
                 </div>
             </div>
-
 
         </div>
   </div>
@@ -74,11 +144,185 @@ export default {
     return {
         article: "",
         tags: [],
-        comments: []
+        comments: [],
+        commentsCnt: 0,
+
+        myComment: "",
+
+        pageCnt: 1,
+        disabled: false,
+
+        myReply: "",
+        cmid: -1,
+        replyid: -1,
+        replyType: "",
+        touser: "",
+
+        replies: {}
     }
   },
   methods: {
+      publishComment: function() {
 
+          var formData = new FormData()
+          formData.append('cmcontent', this.myComment)
+          formData.append('username', 'vv')
+          formData.append('articleid', this.article.id)
+          this.$http.post('http://localhost:8080/comment/publish', formData).then(res => {
+              this.myComment = ''
+              this.getComments()
+              this.getCommentsCnt()
+              this.$http.get('http://localhost:8080/comment/count', {params: {articleid: this.article.id}})
+                .then((res) => {
+                    this.commentsCnt = res.body
+                    var fd = new FormData()
+                    fd.append('articleid', this.article.id)
+                    fd.append('commentsCnt', this.commentsCnt)
+                    this.$http.post('http://localhost:8080/article/updatecomment', fd).then(res => {
+               
+                        this.article.commentsCnt = this.commentsCnt
+                       
+                    })
+                }, (err) => {
+                    console.log(err)
+                })
+              
+          }, err => {
+              console.log(err)
+          }) 
+
+      },
+      getComments: function() {
+          this.$http.get('http://localhost:8080/comment/page', {params: {
+                articleid: this.$route.params.articleid,
+                limit: this.pageCnt * 2
+              }
+            })
+            .then(function(res) {
+                res.body.forEach(element => {
+                        let value = element.cmdate
+                        let time = new Date(value)
+                        let Y = time.getFullYear()
+                        let m = time.getMonth() + 1
+                        let d = time.getDate()
+                        let h = time.getHours()
+                        let M = time.getMinutes()
+                        let s = time.getSeconds()
+                        if(h < 10) h = '0' + h
+                        if(M < 10) M = '0' + M
+                        if(s < 10) s = '0' + s
+                        element.cmdate = Y + '-' + m + '-' + d + ' ' + h + ':' + M + ':' + s
+
+                        this.getReplies(element.cmid)
+                    }
+                )   
+
+                this.comments = res.body
+
+            }, function(err) {
+                console.log(err)
+            })
+      },
+      showMore: function() {
+
+         // this.getCommentsCnt()
+          this.$http.get('http://localhost:8080/comment/count', {params: {articleid: this.article.id}})
+            .then((res) => {
+                this.commentsCnt = res.body
+
+                if(this.pageCnt * 2 < this.commentsCnt) {
+                    this.pageCnt ++
+                    this.getComments()
+                } else {
+                    console.log('none')
+                }
+            }, (err) => {
+                console.log(err)
+            })
+          
+      },
+      getCommentsCnt: function() {
+          this.$http.get('http://localhost:8080/comment/count', {params: {articleid: this.article.id}})
+            .then((res) => {
+                this.commentsCnt = res.body
+            }, (err) => {
+                console.log(err)
+            })
+      },
+      goCommentReply: function(comment) {
+          this.cmid = comment.cmid
+          this.replyid = this.cmid
+          this.replyType = 'comment'
+          this.touser = comment.username
+          
+      },
+      goReplyReply: function(comment, reply) {
+          this.cmid = comment.cmid
+          this.replyid = reply.id
+          this.replyType = 'reply'
+          this.touser = reply.fromuser
+      },
+      cancelReply: function() {
+          this.replyid = -1
+          this.myReply = ''
+
+      },
+      reply: function() {
+          var formData = new FormData()
+          formData.append('cmid', this.cmid)
+          formData.append('replyid', this.replyid)
+          formData.append('replytype', this.replyType)
+          formData.append('replycontent', this.myReply)
+          formData.append('fromuser', 'vv')
+          formData.append('touser', this.touser)
+          let cmid = this.cmid
+          this.$http.post('http://localhost:8080/reply/publish', formData)
+            .then(res => {
+                this.getReplies(cmid)
+                
+                console.log(this.replies)
+            }, err => {
+                console.log(err)
+            })
+          this.cmid = -1
+          this.replyid = -1
+          this.replyType = ''
+          this.touser = ''
+          this.myReply = ''
+      },
+      replyReply: function() {
+          var formData = new FormData()
+          formData.append('cmid', this.cmid)
+          formData.append('replyid', this.replyid)
+          formData.append('replytype', this.replyType)
+          formData.append('replycontent', this.myReply)
+          formData.append('fromuser', 'vv')
+          formData.append('touser', this.touser)
+          let cmid = this.cmid
+          this.$http.post('http://localhost:8080/reply/publish', formData)
+            .then(res => {
+                this.getReplies(cmid)
+                
+                console.log(this.replies)
+            }, err => {
+                console.log(err)
+            })
+          this.cmid = -1
+          this.replyid = -1
+          this.replyType = ''
+          this.touser = ''
+          this.myReply = ''
+      },
+      getReplies: function(cmid) {
+          this.$http.get('http://localhost:8080/reply/replies', {params: {cmid: cmid}})
+            .then(res => {
+
+                this.replies[cmid] = res.body
+                this.$forceUpdate()
+            }, err => {
+                console.log(err)
+            })
+      }
   },
   mounted() {
     //   this.article = this.$route.params.article[0]
@@ -88,39 +332,39 @@ export default {
       let $ = this
 
       this.$http.get('http://localhost:8080/article/readarticle', {params: {articleid: articleid}})
-        .then(function(res) {
+        .then(function(resp) {
 
-            let value = res.body.date
+            let value = resp.body.date
             let time = new Date(value)
             let Y = time.getFullYear()
             let m = time.getMonth() + 1
             let d = time.getDate()
-            res.body.date =  Y + '-' + m + '-' + d
+            resp.body.date =  Y + '-' + m + '-' + d
+
+            resp.body.readcount = 0
+
+            this.$http.get('http://localhost:8080/article/readcount', {params: {articleid: resp.body.id}})
+                            .then(res => {
+                                resp.body.readcount = res.body
+                            }, (err => {
+                                console.log(err)
+                            }))
+
+            // this.$http.get('http://localhost:8080/comment/count', {params: {articleid: resp.body.id}})
+            //     .then((res) => {
+            //         resp.body.commentsCnt = res.body
+            //     }, (err) => {
+            //         console.log(err)
+            //     })
        
-            $.article = res.body
+            $.article = resp.body
         }, function(err) {
             console.log(err)
         })
 
-      this.$http.get('http://localhost:8080/comment/comments', {params: {articleid: articleid}})
-        .then(function(res) {
-            // console.log(res.body)
-            res.body.forEach(element => {
-                    let value = element.cmdate
-                    let time = new Date(value)
-                    let Y = time.getFullYear()
-                    let m = time.getMonth() + 1
-                    let d = time.getDate()
-                    element.cmdate = Y + '-' + m + '-' + d
-                }
-            )   
+        this.getComments()
 
-            $.comments = res.body
-            // console.log($.comments)
-        }, function(err) {
-            console.log(err)
-        })
-
+        //避免重复渲染tags
       if(this.tags === undefined) {
           this.$http.get('http://localhost:8080/tag/articletag', {params: {'articleid': articleid}})
                     .then(function(res) {
@@ -129,6 +373,14 @@ export default {
                         console.log(err)
                     })
       }
+  },
+  watch: {
+      'comments': function() {
+          this.$forceUpdate()
+      },
+      'replies': function() {
+          this.$forceUpdate()
+      },
   }
 }
 </script>

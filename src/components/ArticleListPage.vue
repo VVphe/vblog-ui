@@ -54,6 +54,7 @@ export default {
   methods: {
       getAllHotList: function(offset) {
           //this.$http.get('')
+          this.getArticleAndTag(offset)
       },
       getAllNewList: function(offset) {
         //   this.$http.get('http://localhost:8080/article/newestarticle', {params: {offset: offset, limit: 1}})
@@ -123,6 +124,7 @@ export default {
         }
       },
       getArticleAndTag: function(offset) {
+        if(this.type === 'new') {
           this.$http.get('http://localhost:8080/article/newestarticle', {params: {offset: offset, limit: 1}})
             .then(function(res) {
                 res.body.forEach(element => {
@@ -140,10 +142,12 @@ export default {
                     this.$http.get('http://localhost:8080/tag/articletag', {params: {'articleid': article.id}})
                     .then(function(res) {
                         //console.log(res)
-                        this.tags.push({
-                            articleid: article.id,
-                            articleTag: res.body
-                        })
+                        if(this.tags.filter(tag => tag.articleid === article.id).length === 0) {
+                            this.tags.push({
+                                articleid: article.id,
+                                articleTag: res.body
+                            })
+                        }
                     }, function(err) {
                         console.log(err)
                     })
@@ -152,6 +156,40 @@ export default {
             }, function(err) {
                 console.log(err)
             })
+        } else {
+            this.$http.get('http://localhost:8080/article/hotestarticle', {params: {start: offset, end: offset}})
+            .then(function(res) {
+                console.log(res)
+                res.body.forEach(element => {
+                        let value = element.date
+                        let time = new Date(value)
+                        let Y = time.getFullYear()
+                        let m = time.getMonth() + 1
+                        let d = time.getDate()
+                        element.date = Y + '-' + m + '-' + d
+                    }
+                )  
+                this.articles = res.body
+                this.articles.tag = []
+                this.articles.forEach(article => {
+                    this.$http.get('http://localhost:8080/tag/articletag', {params: {'articleid': article.id}})
+                    .then(function(res) {
+                        //console.log(res)
+                        if(this.tags.filter(tag => tag.articleid === article.id).length === 0) {
+                            this.tags.push({
+                                articleid: article.id,
+                                articleTag: res.body
+                            })
+                        }
+                    }, function(err) {
+                        console.log(err)
+                    })
+                })
+                
+            }, function(err) {
+                console.log(err)
+            })
+        }
       },
       goThisArticle: function(articleid) {
           let tags = this.tags.filter(tag => tag.articleid === articleid)
@@ -160,6 +198,7 @@ export default {
   },
   mounted() {
     this.type = this.$route.params.type
+    console.log(this.type)
     this.initArticle()
   }
 }

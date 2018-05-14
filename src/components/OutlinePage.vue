@@ -20,6 +20,7 @@
                                         <i class="fa fa-comments-o"></i> <a href="#">Comments {{hotArticle.commentsCnt}}</a>
                                         <i class="fa fa-clock-o"></i> <a href="#">{{hotArticle.date}}</a>
                                         <i class="fa fa-user"></i> <a href="#">{{hotArticle.auth}}</a>
+                                        <i class="fa fa-eye"></i> {{hotArticle.readcount}} views
                                     </div>
                                 </div>
                             </div>
@@ -49,6 +50,7 @@
                                         <i class="fa fa-comments-o"></i> <a href="#">Comments {{newArticle.commentsCnt}}</a>
                                         <i class="fa fa-clock-o"></i> <a href="#">{{newArticle.date}}</a>
                                         <i class="fa fa-user"></i> <a href="#">{{newArticle.auth}}</a>
+                                        <i class="fa fa-eye"></i> {{newArticle.readcount}} views
                                     </div>
                                 </div>
                             </div>
@@ -75,9 +77,9 @@ export default {
           this.$router.push({name: 'ArticleListPage', params: {type: type}})
       },
       getHotestArticle: function() {
-        this.$http.get('http://localhost:8080/article/hotestarticle')
+        this.$http.get('http://localhost:8080/article/hotestarticle', {params: {start: 0, end: 9}})
             .then(function(res) {
-
+                // console.log(res)
                 res.body.forEach(element => {
                         let value = element.date
                         let time = new Date(value)
@@ -85,6 +87,14 @@ export default {
                         let m = time.getMonth() + 1
                         let d = time.getDate()
                         element.date = Y + '-' + m + '-' + d
+
+                        element.readcount = 0
+                        this.$http.get('http://localhost:8080/article/readcount', {params: {articleid: element.id}})
+                            .then(res => {
+                                element.readcount = res.body
+                            }, (err => {
+                                console.log(err)
+                            }))
                     }
                 )   
                 this.hotestArticle = res.body
@@ -103,10 +113,18 @@ export default {
                         let m = time.getMonth() + 1
                         let d = time.getDate()
                         element.date = Y + '-' + m + '-' + d
+
+                        element.readcount = 0
+                        this.$http.get('http://localhost:8080/article/readcount', {params: {articleid: element.id}})
+                            .then(res => {
+                                element.readcount = res.body
+                            }, (err => {
+                                console.log(err)
+                            }))
                     }
                 )   
                 this.newestArticle = res.body
-                console.log(this.newestArticle)
+                // console.log(this.newestArticle)
             }, function(err) {
                 console.log(err)
             })

@@ -19,7 +19,7 @@
                         <div class="col-md-6">
                             <div class="mediue text-right">
                                 <h4>Stats:</h4>
-                                <div> <i class="fa fa-comments-o"> </i> {{article.commentsCnt}} </div>
+                                <div> <i class="fa fa-comments-o"> </i> {{article.commentsCnt}} comments</div>
                                 <i class="fa fa-eye"> </i> 144 views
                             </div>
                         </div>
