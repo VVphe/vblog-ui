@@ -154,4 +154,15 @@ export default {
     bottom: 40px;
     right: 10px;
 }
+.readmore {
+    float: right;
+    margin-top:10px;
+}
+.readmore-i {
+    float: right; 
+    padding-top: 2px;
+}
+.article-type {
+    display: inline-block;
+}
 </style>

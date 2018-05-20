@@ -1,42 +1,54 @@
 <template>
-    <div id="EditPage">
-        
-        <div class="wrapper wrapper-content">
-            <div class="row">
-                <div class="col-lg-12">
-                <div class="ibox float-e-margins">
-                   
-                    <div class="ibox-content">
-                        <div class="md-editor" id="1526324061049">
-                            <textarea name="content" data-provide="markdown-editable" rows="30" >
-                            </textarea>
-                            <div class="md-fullscreen-controls">
-                                <a href="#" class="exit-fullscreen" title="Exit fullscreen">
-                                    <span class="glyphicon glyphicon-fullscreen"></span>
-                                </a>
-                            </div> 
-                        </div>
-                    </div>
-                   
-                </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <div id="EditPage" >
+        <editor @submitArticle="submitArticle"></editor>   
+        <descriptionbox v-if="showBox" class="description" @closeDBox="closeBox" @publishMyArticle="publishArticle"></descriptionbox>
     </div>
     
 </template>
 
 <script>
+import editor from "./editor/Editor.vue"
+import descriptionbox from "./editor/DescriptionBox.vue"
 export default {
   data() {
     return {
-        show: false
+        showBox: false,
+        title: '',
+        description: '',
+        content: ''
     }
   },
   methods: {
-
+      submitArticle: function(value) {
+          this.title = value.title
+          this.content = value.article
+          this.showBox = true
+      },
+      closeBox: function(value) {
+          this.showBox = false
+      },
+      publishArticle: function(description) {
+          this.description = description
+          this.showBox = false
+          var formData = new FormData()
+          formData.append('auth', 'vv')
+          formData.append('title', this.artitle)
+          formData.append('content', this.content)
+          formData.append('description', this.description)
+          formData.append('category', 'java')
+          console.log(description)
+          console.log(formData)
+          this.$http.post('http://localhost:8080/article/publish', formData)
+            .then((res) => {
+                console.log(res)
+            }, (err) => {
+                console.log(err)
+            })
+      }
+  },
+  components: {
+      editor,
+      descriptionbox
   },
   mounted() {
     
@@ -45,4 +57,7 @@ export default {
 </script>
 
 <style scoped>
+.description {
+   
+}
 </style>

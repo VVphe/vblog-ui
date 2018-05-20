@@ -7,6 +7,7 @@ import AboutmePage from '../components/AboutmePage'
 import OutlinePage from '../components/OutlinePage'
 import ArticleListPage from '../components/ArticleListPage'
 import EditPage from '../components/EditPage'
+import TodoPage from '../components/TodoPage'
 
 Vue.use(Router)
 
@@ -41,6 +42,11 @@ export default new Router({
       path: '/edit',
       name: 'EditPage',
       component: EditPage
+    },
+    {
+      path: '/todo',
+      name: 'TodoPage',
+      component: TodoPage
     }
   ]
 })

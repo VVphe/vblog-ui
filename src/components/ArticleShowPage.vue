@@ -386,4 +386,10 @@ export default {
 </script>
 
 <style scoped>
+    .tagname {
+        margin-left:5px;
+    }
+    .reply-area {
+        background-color: #e7eaec;
+    }
 </style>

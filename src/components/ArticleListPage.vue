@@ -205,4 +205,13 @@ export default {
 </script>
 
 <style scoped>
+    .tagname {
+        margin-left:5px;
+    }
+    .page-select {
+        position: fixed; 
+        right: 30px; 
+        bottom: 30px;
+    }
+
 </style>

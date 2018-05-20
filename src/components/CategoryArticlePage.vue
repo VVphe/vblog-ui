@@ -13,7 +13,7 @@
                         <div class="col-md-6" >
                             <h5>Tags:</h5>
                             <div v-for="tag in tags" v-if="tag.articleid === article.id">
-                                <button type="button" class="btn btn-outline btn-primary btn-xs" style="margin-left:5px"  v-for="t in tag.articleTag">{{t.tagname}}</button>
+                                <button type="button" class="btn btn-outline btn-primary btn-xs tagname" v-for="t in tag.articleTag">{{t.tagname}}</button>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -95,4 +95,7 @@ export default {
 </script>
 
 <style scoped>
+.tagname {
+    margin-left:5px;
+}
 </style>
