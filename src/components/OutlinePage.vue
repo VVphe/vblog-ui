@@ -1,5 +1,6 @@
 <template>
-    <div id="OutlinePage">
+    <div id="OutlinePage" class="row">
+
         <div class="col-lg-6">
             <div class="ibox">
                 <div class="ibox-title">
@@ -30,6 +31,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-lg-6">
             <div class="ibox">
                 <div class="ibox-title">
@@ -59,7 +61,6 @@
                 </div>
             </div>
         </div>
-
         <div class="addArticle" @click="goEditArticle">
             <button type="button" class="btn btn-primary btn-lg dim btn-circle btn-outline"  ><i class="fa fa-edit"></i></button>
         </div>
@@ -83,7 +84,7 @@ export default {
       getHotestArticle: function() {
         this.$http.get('http://localhost:8080/article/hotestarticle', {params: {start: 0, end: 9}})
             .then(function(res) {
-                // console.log(res)
+                console.log(res)
                 res.body.forEach(element => {
                         let value = element.date
                         let time = new Date(value)

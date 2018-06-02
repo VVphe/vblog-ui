@@ -55,56 +55,35 @@
                                             <br>
                                        
                                     </div>
-                                    <div class="social-feed-box" v-for="comment in comments">
-                                        <div class="social-avatar">
+                                    <div class="social-footer" v-for="comment in comments">
+                                        <div class="social-comment">
                                             <div class="media-body">
                                                 <a href="#">
                                                     {{comment.username}}
                                                 </a>
                                                 <small class="text-muted">{{comment.cmdate}}</small>
+                                                <p>
+                                                    {{comment.cmcontent}}
+                                                </p>
                                             </div>
-                                        </div>
-                                        <div class="social-body">
-                                            <p>
-                                                {{comment.cmcontent}}
-                                            </p>
+                                            <div>
+                                            <div class="social-comment" v-for="reply in replies[comment.cmid]" @click="goReplyReply(comment, reply)">
+                                                
+                                                <div class="media-body">
+                                                    <a href="#">
+                                                        {{reply.fromuser}} 回复 {{reply.touser}}
+                                                    </a>
 
-                                            <a @click="goCommentReply(comment)">
-                                                回复
-                                            </a>
-                                        </div>
-                                        <hr>
-                                        <div v-if="replyid === comment.cmid">
-                                            <textarea  style="background-color: #e7eaec" class="form-control" placeholder="请输入你的回复" v-model="myReply">
-                                                                    
-                                            </textarea>
-                                            <br>
-                                            <div class="text-right">
-                                                <button type="submit" class="btn btn-sm btn-default m-t-n-xs" @click="cancelReply"><strong>取消</strong></button>
-                                                <button type="submit" class="btn btn-sm btn-primary m-t-n-xs" @click="reply"><strong>发表回复</strong></button>
-                                            </div>
-                                            <br>
-                                        </div>
-                                        <div>
-                                            <div class="social-feed-box col-lg-offset-1" v-for="reply in replies[comment.cmid]" @click="goReplyReply(comment, reply)">
-                                                <div class="social-avatar">
-                                                    <div class="media-body">
-                                                        <a href="#">
-                                                            {{reply.fromuser}} 回复 {{reply.touser}}
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div class="social-body">
                                                     <p>
                                                         {{reply.replycontent}}
                                                     </p>
                                                 </div>
-                                                <div v-if="replyid === reply.id">
-                                                    <textarea  style="background-color: #e7eaec" class="form-control" placeholder="请输入你的回复" v-model="myReply">
+                                        
+                                                <div v-if="replyid === reply.id" >
+                                                    <textarea class="form-control" placeholder="请输入你的回复" v-model="myReply">
                                                                             
                                                     </textarea>
-                                                    <br>
-                                                    <div class="text-right">
+                                                    <div class="text-right btn-gp">
                                                         <button type="submit" class="btn btn-sm btn-default m-t-n-xs" @click.stop="cancelReply"><strong>取消</strong></button>
                                                         <button type="submit" class="btn btn-sm btn-primary m-t-n-xs" @click.stop="replyReply"><strong>发表回复</strong></button>
                                                     </div>
@@ -112,7 +91,17 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        </div>
                                         <br>
+                                        <div>
+                                            <textarea  class="form-control" placeholder="请输入你的回复" v-model="myReply">
+                                                                    
+                                            </textarea>
+                                            <div class="text-right btn-gp">
+                                                <button type="submit" class="btn btn-sm btn-default m-t-n-xs" @click="cancelReply"><strong>取消</strong></button>
+                                                <button type="submit" class="btn btn-sm btn-primary m-t-n-xs" @click="reply(comment)"><strong>发表回复</strong></button>
+                                            </div>
+                                        </div>
                                     </div>
            
                                    
@@ -267,7 +256,8 @@ export default {
           this.myReply = ''
 
       },
-      reply: function() {
+      reply: function(comment) {
+          this.goCommentReply(comment)
           var formData = new FormData()
           formData.append('cmid', this.cmid)
           formData.append('replyid', this.replyid)
@@ -386,10 +376,36 @@ export default {
 </script>
 
 <style scoped>
-    .tagname {
-        margin-left:5px;
-    }
-    .reply-area {
-        background-color: #e7eaec;
-    }
+.tagname {
+    margin-left:5px;
+}
+/* .reply-area {
+    background-color: #e7eaec;
+} */
+.social-footer {
+    border-top: 1px solid #e7eaec;
+    padding: 10px 15px;
+    background: #f9f9f9;
+}
+.social-comment .social-comment {
+    margin-left: 45px;
+}
+.reply-area {
+    background-color: #FFFFFF;
+    background-image: none;
+    border: 1px solid #e5e6e7;
+    border-radius: 1px;
+    color: inherit;
+    display: block;
+    padding: 6px 12px;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    width: 100%;
+    font-size: 14px;
+}
+.textarea:focus {
+    border-color: #1ab394 !important;
+}
+.btn-gp {
+    margin-top: 5px
+}
 </style>

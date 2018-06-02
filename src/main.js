@@ -4,6 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueResource from 'vue-resource'
+import ElementUI from 'element-ui';
+import '../theme/index.css';
 
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/pie'
@@ -13,6 +15,7 @@ import util from './util'
 
 Vue.use(VueResource) 
 Vue.use(util)
+Vue.use(ElementUI);
 
 Vue.component('eChart', ECharts)
 

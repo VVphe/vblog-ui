@@ -7,6 +7,22 @@
                 
                 <div class="ibox-content">
                     <h1><span>Title&nbsp</span><input type="text" class="title-in" v-model="title"></h1>
+                    <div class="tag-in">
+                        <h3><span>Category&nbsp</span></h3>
+                        <el-select v-model="category" placeholder="请选择" style="margin-right:20px;margin-left: 5px">
+                            <el-option
+                            v-for="item in options"
+                            :key="item"
+                            :label="item"
+                            :value="item"
+                            @change="handleOptionChange">
+                            </el-option>
+                        </el-select>
+                        <h3><span>Tags&nbsp</span></h3>
+                        <button v-for="tag in tags" type="button" class="btn btn-outline btn-primary btn-xs" style="margin-left: 5px;">{{tag}}&nbsp</button>
+
+                        <button class="btn btn-primary btn-circle btn-outline" style="margin-left: 5px" type="button" @click="addTags">+</button>
+                    </div>
                     
                     <hr>
                     <div class="md-editor" id="1526324061049">
@@ -19,7 +35,7 @@
                         </div> 
                     </div>
                     <div class=" editor-flex">
-                    <button type="button" class="btn btn-w-m btn-primary" @click="publishArticle">Publish</button>
+                        <button type="button" class="btn btn-w-m btn-primary" @click="publishArticle">Publish</button>
                     </div>
                 </div>
                 
@@ -39,16 +55,20 @@ export default {
     return {
         title: '',
         article: '',
+        category: '',
+        options: ['Java', 'Python', 'Nodejs', 'Javascript', 'Mongodb', 'Mysql']
     }
   },
+  props: ["tags"],
   methods: {
       publishArticle: function() {
-        //   var formData = new FormData()
-        //   formData.append('auth', 'vv')
-        //   formData.append('title', this.ariticleTitle)
-        //   formData.append('content', this.article)
-        //   formData.append('description')
-        this.$emit('submitArticle', {title: this.title, article: this.article})
+        this.$emit('submitArticle', {title: this.title, article: this.article, category: this.category})
+      },
+      addTags: function() {
+          this.$emit('toAddTag', "toAddTag")
+      },
+      handleOptionChange: function(value) {
+          this.category = value
       }
   },
   mounted() {
@@ -75,5 +95,10 @@ export default {
 h1 {
     display: flex;
     justify-content: center;
+}
+.tag-in {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
 }
 </style>

@@ -10,14 +10,14 @@
           <li class="nav-header">
             <div class="dropdown profile-element">
               <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">David Williams</strong>
-                             </span> <span class="text-muted text-xs block">Art Director <b class="caret"></b></span> </span> </a>
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">Jiang pengwei</strong>
+                             </span> <span class="text-muted text-xs block">Student<b class="caret"></b></span> </span> </a>
               <ul class="dropdown-menu animated fadeInRight m-t-xs">
                 <li><a href="#">Logout</a></li>
               </ul>
             </div>
             <div class="logo-element">
-              IN+
+              Vv+
             </div>
           </li>
           <li :class="{ active:isAboutmePage }" @click="goAboutme">
@@ -79,7 +79,7 @@
           10GB of <strong>250GB</strong> Free.
         </div>
         <div>
-          <strong>Copyright</strong> Example Company &copy; 2014-2015
+          <strong>Copyright</strong> Jiang pengwei &copy; 2018
         </div>
       </div>
 
