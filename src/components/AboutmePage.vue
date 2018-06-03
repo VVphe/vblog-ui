@@ -38,8 +38,11 @@
                         </div>
                         <div>
                             <div class="ibox-content">
-                                <div>
-                                <eChart :options="pieOption"></eChart>
+                                <div v-if="showPie"> 
+                                    <eChart :options="pieOption" @click="handlePieClick"></eChart>
+                                </div>
+                                <div v-if="showLine" style="width: 5px"> 
+                                    <eChart :options="lineOption"></eChart>
                                 </div>
                             </div>
                         </div>
@@ -81,6 +84,8 @@
 export default {
   data() {
     return {
+        showPie: true,
+        showLine: false,
         pieOption: {
             tooltip : {
                 trigger: 'item',
@@ -88,6 +93,7 @@ export default {
             },
             series: [
                 {
+                    name: 'category',
                     type: 'pie',
                     radius : '55%',
                     center: ['30%', '50%'],
@@ -108,11 +114,54 @@ export default {
                     }
                 }
             ]
+        },
+        lineOption: {
+            title: {
+                text: ''
+            },
+            grid: {
+                x: 25,
+                width: 400
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'time',
+                maxInterval: 3600 * 24 * 1000
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: {
+                name: '',
+                type: 'line',
+                data: []
+            }
         }
     }
   },
   methods: {
-
+    handlePieClick: function(params) {
+        let category = params.name
+        this.$http.get(global.vblogUrl + '/article/categoryreadcount', {params: {category: category}})
+            .then((res) => {
+                console.log(res)
+                var finalData = []
+                var myData = res.body
+                for(var key in myData) {
+                    finalData.push([key, myData[key]])
+                }
+                console.log(finalData)
+                this.showPie = false
+                this.showLine = true
+                this.lineOption.title.text = category
+                this.lineOption.series.name = category
+                this.lineOption.series.data = finalData
+            }, (err) => {
+                console.log(err)
+            })
+    }
   },
   mounted() {
 
