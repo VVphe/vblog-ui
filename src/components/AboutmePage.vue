@@ -36,8 +36,12 @@
                         <div class="ibox-title">
                             <h5>Browse Detail</h5>
                         </div>
+                        
                         <div>
                             <div class="ibox-content">
+                                <div class=" rt-btn" v-if="showLine">
+                                    <button class="btn btn-default dim" type="button" @click="turnToPie"><i class="fa fa-arrow-circle-left"></i></button>
+                                </div>
                                 <div v-if="showPie"> 
                                     <eChart :options="pieOption" @click="handlePieClick"></eChart>
                                 </div>
@@ -146,13 +150,11 @@ export default {
         let category = params.name
         this.$http.get(global.vblogUrl + '/article/categoryreadcount', {params: {category: category}})
             .then((res) => {
-                console.log(res)
                 var finalData = []
                 var myData = res.body
                 for(var key in myData) {
                     finalData.push([key, myData[key]])
                 }
-                console.log(finalData)
                 this.showPie = false
                 this.showLine = true
                 this.lineOption.title.text = category
@@ -161,6 +163,10 @@ export default {
             }, (err) => {
                 console.log(err)
             })
+    },
+    turnToPie: function() {
+        this.showPie = true
+        this.showLine = false
     }
   },
   mounted() {
@@ -170,4 +176,8 @@ export default {
 </script>
 
 <style scoped>
+.rt-btn {
+    display: flex;
+    justify-content: flex-end;
+}
 </style>
