@@ -75,7 +75,32 @@
                                 </a>
                             </div>
                         </div>
-                        
+                        <div class="ibox-content">
+
+                            <div>
+                                <div class="feed-activity-list">
+
+                                    <div class="feed-element" v-for="log in logs">
+                                        <!-- <a href="#" class="pull-left">
+                                            <img alt="image" class="img-circle" src="img/a1.jpg">
+                                        </a> -->
+                                        <div class="media-body ">
+                                            <small class="pull-right text-navy">{{log.logdate}}</small>
+                                            <strong>{{log.logcontent}}</strong>. <br>
+                                            <!-- <small class="text-muted">Today 4:21 pm - 12.06.2014</small>
+                                            <div class="actions">
+                                                <a class="btn btn-xs btn-white"><i class="fa fa-thumbs-up"></i> Like </a>
+                                                <a class="btn btn-xs btn-danger"><i class="fa fa-heart"></i> Love</a>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-primary btn-block m"><i class="fa fa-arrow-down"></i> Show More</button>
+
+                            </div>
+
+                        </div>
                     </div>
 
                 </div>
@@ -142,7 +167,9 @@ export default {
                 type: 'line',
                 data: []
             }
-        }
+        },
+
+        logs: []
     }
   },
   methods: {
@@ -170,7 +197,24 @@ export default {
     }
   },
   mounted() {
+      this.$http.get(global.vblogUrl + '/log/getlogs')
+        .then((res) => {
+            res.body.forEach(element => {
+                let value = element.logdate
+                let time = new Date(value)
 
+                let Y = time.getFullYear()
+                let m = time.getMonth() + 1 < 10 ? '0' + time.getMonth() + 1 : time.getMonth()
+                let d = time.getDate() < 10 ? '0' + time.getDate() : time.getDate()
+                let H = time.getHours() < 10 ? '0' + time.getHours() : time.getHours()
+                let M = time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()
+                let s = time.getSeconds() < 10 ? '0' + time.getSeconds() : time.getSeconds()
+
+                element.logdate = Y + '-' + m + '-' + d + ' ' + H + ':' + M + ':' + s
+                
+            })
+            this.logs = res.body
+        })
   }
 }
 </script>
