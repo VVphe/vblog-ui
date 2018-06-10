@@ -65,3 +65,16 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+
+Vue.http.options.emulateJSON = true;
+Vue.http.options.crossOrigin = true;
+Vue.http.options.emulateHTTP = true;
+Vue.http.interceptors.push((request, next)  =>{  
+  let TOKEN = window.localStorage.getItem("token")
+  Vue.http.headers.common.Authorization = TOKEN;
+  console.log(request)
+  next((response) => {  
+    return response;  
+  });  
+});  

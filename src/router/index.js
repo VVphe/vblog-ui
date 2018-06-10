@@ -8,45 +8,80 @@ import OutlinePage from '../components/OutlinePage'
 import ArticleListPage from '../components/ArticleListPage'
 import EditPage from '../components/EditPage'
 import TodoPage from '../components/TodoPage'
+import LoginPage from '../components/LoginPage'
+import UserMainPage from '../components/UserMainPage'
+import VueRouter from 'vue-router';
 
 Vue.use(Router)
 
-export default new Router({
-  routes: [
-    {
-      path: '/categoryarticle/:category',
-      name: 'CategoryArticlePage',
-      component: CategoryArticlePage
-    },
-    {
-      path: '/article/:articleid',
-      name: 'ArticleShowPage',
-      component: ArticleShowPage
-    },
-    {
-      path: '/about',
-      name: 'AboutmePage',
-      component: AboutmePage
-    },
-    {
-      path: '/outline',
-      name: 'OutlinePage',
-      component: OutlinePage
-    },
-    {
-      path: '/articlelist',
-      name: 'ArticleListPage',
-      component: ArticleListPage
-    },
-    {
-      path: '/edit',
-      name: 'EditPage',
-      component: EditPage
-    },
-    {
-      path: '/todo',
-      name: 'TodoPage',
-      component: TodoPage
-    }
-  ]
+const routes = [
+  {
+    path: '/login',
+    name: 'LoginPage',
+    component: LoginPage
+  },
+  {
+    path: '/main',
+    name: 'UserMainPage',
+    component: UserMainPage,
+    children: [
+      {
+        path: '/categoryarticle/:category',
+        name: 'CategoryArticlePage',
+        component: CategoryArticlePage
+      },
+      {
+        path: '/article/:articleid',
+        name: 'ArticleShowPage',
+        component: ArticleShowPage
+      },
+      {
+        path: '/about',
+        name: 'AboutmePage',
+        component: AboutmePage
+      },
+      {
+        path: '/outline',
+        name: 'OutlinePage',
+        component: OutlinePage
+      },
+      {
+        path: '/articlelist',
+        name: 'ArticleListPage',
+        component: ArticleListPage
+      },
+      {
+        path: '/edit',
+        name: 'EditPage',
+        component: EditPage
+      },
+      {
+        path: '/todo',
+        name: 'TodoPage',
+        component: TodoPage
+      }
+    ]
+  },
+  
+]
+
+const router = new VueRouter({
+  routes: routes
 })
+
+router.beforeEach(((to, from, next) => {
+  let token = window.localStorage.getItem('token')
+  if (to.matched.some(record => record.meta.requiresAuth) && (!token || token === null)) {
+    next({
+      name: 'LoginPage',
+      query: { redirect: to.fullPath }
+    })
+  } else {
+    next()
+  }
+}))
+
+export default router
+
+
+
