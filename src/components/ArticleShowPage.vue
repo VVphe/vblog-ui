@@ -58,7 +58,7 @@
                                     <div class="social-footer" v-for="comment in comments">
                                         <div class="social-comment">
                                             <div class="media-body">
-                                                <a href="#">
+                                                <a @click="goCommentReply(comment)">
                                                     {{comment.username}}
                                                 </a>
                                                 <small class="text-muted">{{comment.cmdate}}</small>
@@ -70,7 +70,7 @@
                                             <div class="social-comment" v-for="reply in replies[comment.cmid]" @click="goReplyReply(comment, reply)">
                                                 
                                                 <div class="media-body">
-                                                    <a href="#">
+                                                    <a>
                                                         {{reply.fromuser}} 回复 {{reply.touser}}
                                                     </a>
 
@@ -93,7 +93,8 @@
                                         </div>
                                         </div>
                                         <br>
-                                        <div>
+
+                                        <div v-if="replyid === comment.cmid">
                                             <textarea  class="form-control" placeholder="请输入你的回复" v-model="myReply">
                                                                     
                                             </textarea>
@@ -155,7 +156,8 @@ export default {
 
           var formData = new FormData()
           formData.append('cmcontent', this.myComment)
-          formData.append('username', 'vv')
+        //   formData.append('username', 'vv')
+          formData.append('username', window.localStorage.getItem('user'))
           formData.append('articleid', this.article.id)
           this.$http.post('http://localhost:8080/comment/publish', formData).then(res => {
               this.myComment = ''
@@ -257,13 +259,13 @@ export default {
 
       },
       reply: function(comment) {
-          this.goCommentReply(comment)
+          //this.goCommentReply(comment)
           var formData = new FormData()
           formData.append('cmid', this.cmid)
           formData.append('replyid', this.replyid)
           formData.append('replytype', this.replyType)
           formData.append('replycontent', this.myReply)
-          formData.append('fromuser', 'vv')
+          formData.append('fromuser', window.localStorage.getItem('user'))
           formData.append('touser', this.touser)
           let cmid = this.cmid
           this.$http.post('http://localhost:8080/reply/publish', formData)
@@ -286,7 +288,7 @@ export default {
           formData.append('replyid', this.replyid)
           formData.append('replytype', this.replyType)
           formData.append('replycontent', this.myReply)
-          formData.append('fromuser', 'vv')
+          formData.append('fromuser', window.localStorage.getItem('user'))
           formData.append('touser', this.touser)
           let cmid = this.cmid
           this.$http.post('http://localhost:8080/reply/publish', formData)

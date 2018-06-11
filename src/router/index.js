@@ -9,6 +9,7 @@ import ArticleListPage from '../components/ArticleListPage'
 import EditPage from '../components/EditPage'
 import TodoPage from '../components/TodoPage'
 import LoginPage from '../components/LoginPage'
+import RegisterPage from '../components/RegisterPage'
 import UserMainPage from '../components/UserMainPage'
 import VueRouter from 'vue-router';
 
@@ -19,6 +20,11 @@ const routes = [
     path: '/login',
     name: 'LoginPage',
     component: LoginPage
+  },
+  {
+    path: '/register',
+    name: 'RegisterPage',
+    component: RegisterPage
   },
   {
     path: '/main',

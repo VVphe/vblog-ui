@@ -14,15 +14,23 @@
                                 <h5>
                                     About me
                                 </h5>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat.
+
+                                <p style="margin-left: 5px">
+                                   Student
                                 </p>
+                                <p style="margin-left: 5px">
+                                   @Tongji University
+                                </p>
+                                <p style="margin-left: 5px">
+                                   22 years old
+                                </p>
+                            
                                 <div class="row m-t-lg">
                                     <div class="col-md-4">
-                                        <h5><i class="fa fa-edit"></i><strong>169</strong> Articles</h5>
+                                        <h5><i class="fa fa-edit"></i><strong>{{counts}}</strong> Articles</h5>
                                     </div>
                                     <div class="col-md-6">
-                                        <h5><i class="fa fa-files-o"></i><strong>28</strong> Categories</h5>
+                                        <h5><i class="fa fa-files-o"></i><strong>6</strong> Categories</h5>
                                     </div>
                                 </div>
                                 <div>
@@ -96,7 +104,7 @@
                                     </div>
                                 </div>
 
-                                <button class="btn btn-primary btn-block m"><i class="fa fa-arrow-down"></i> Show More</button>
+                                
 
                             </div>
 
@@ -115,6 +123,7 @@ export default {
     return {
         showPie: true,
         showLine: false,
+        categoryData: [],
         pieOption: {
             tooltip : {
                 trigger: 'item',
@@ -127,13 +136,14 @@ export default {
                     radius : '55%',
                     center: ['30%', '50%'],
                     data: [
-                        {value: 10, name: 'Java'},
-                        {value: 7, name: 'Python'},
-                        {value: 8, name: 'Nodejs'},
-                        {value: 12, name: 'Javascript'},
-                        {value: 9, name: 'Mongodb'},
-                        {value: 20, name: 'Mysql'}
+                        // {value: 10, name: 'Java'},
+                        // {value: 7, name: 'Python'},
+                        // {value: 8, name: 'Nodejs'},
+                        // {value: 12, name: 'Javascript'},
+                        // {value: 9, name: 'Mongodb'},
+                        // {value: 20, name: 'Mysql'}
                     ],
+                    //data: this.categoryData,
                     itemStyle: {
                         emphasis: {
                             shadowBlur: 10,
@@ -169,7 +179,8 @@ export default {
             }
         },
 
-        logs: []
+        logs: [],
+        counts: '',
     }
   },
   methods: {
@@ -194,6 +205,22 @@ export default {
     turnToPie: function() {
         this.showPie = true
         this.showLine = false
+    },
+
+    getArticleCount: function() {
+        this.$http.get(global.vblogUrl + '/article/count')
+            .then(res => {
+                this.counts = res.body
+            })
+    },
+    getCategoryArticleCnt: function() {
+        var categorys = ['Java', 'Python', 'Nodejs', 'Javascript', 'Mongodb', 'Mysql']
+        categorys.forEach(category => {
+            this.$http.get(global.vblogUrl + '/article/categorycnt', {params: {category: category}})
+                .then(res => {
+                    this.pieOption.series[0].data.push({value: res.body, name: category})
+                })
+        })
     }
   },
   mounted() {
@@ -204,7 +231,7 @@ export default {
                 let time = new Date(value)
 
                 let Y = time.getFullYear()
-                let m = time.getMonth() + 1 < 10 ? '0' + time.getMonth() + 1 : time.getMonth()
+                let m = time.getMonth() + 1 < 10 ? '0' + (time.getMonth() + 1) : time.getMonth()
                 let d = time.getDate() < 10 ? '0' + time.getDate() : time.getDate()
                 let H = time.getHours() < 10 ? '0' + time.getHours() : time.getHours()
                 let M = time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()
@@ -215,6 +242,9 @@ export default {
             })
             this.logs = res.body
         })
+
+      this.getArticleCount()
+      this.getCategoryArticleCnt()
   }
 }
 </script>

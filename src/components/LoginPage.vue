@@ -28,16 +28,14 @@
                         </p>
                         <a class="btn btn-sm btn-white btn-block" @click="goRegister">Create an account</a>
                     </form>
-                    <p class="m-t">
-                        <small>Let's start the fantastic journey in Zabbix-data-UI's world</small>
-                    </p>
+                
                 </div>
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col-md-6">
-                Copyright Xlab of Software College, Tongji University
+                Copyright Jiang Pengwei
             </div>
             <div class="col-md-6 text-right">
                <small>© 2017-2018</small>
@@ -64,9 +62,14 @@ export default {
           this.$http.post(global.vblogUrl + '/login', formData)
             .then(res => {
                 window.localStorage.setItem('token', res.bodyText)
-                console.log(res.bodyText)
+                window.localStorage.setItem('user', this.username)
+                this.$router.push({name: 'AboutmePage'})
+                toastr.success("登录成功")
+            }, err => {
+                toastr.success("登录失败")
             })
-          this.$router.push({name: 'AboutmePage'})
+
+          
           //this.$router.push('/user' + '/' + userid + '/cluster')
       },
       goRegister: function() {

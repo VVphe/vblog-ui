@@ -57,9 +57,9 @@ export default {
           console.log(formData)
           this.$http.post('http://localhost:8080/article/publish', formData)
             .then((res) => {
-                console.log(res)
+                toastr.success("发表成功")
             }, (err) => {
-                console.log(err)
+                toastr.error("无此权限")
             })
       }
   },

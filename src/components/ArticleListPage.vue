@@ -1,5 +1,6 @@
 <template>
   <div id="ArticleListPage">
+      <div class="row">
     <div class="col-lg-12">
         <div class="ibox" v-for="article in articles"> 
             <div class="ibox-content">
@@ -36,6 +37,7 @@
                 <li class="footable-page-arrow"><a data-page="last" href="#last">»</a></li>
             </ul>
         </div>
+      </div>
       </div>
   </div>
 </template>
@@ -111,12 +113,19 @@ export default {
             this.getArticleAndTag(offset)
       },
       initArticle: function() {
+        if(this.type == 'new') {
         this.$http.get('http://localhost:8080/article/count')
             .then(function(res) {
-                this.pageCount = res.body / 1
+                this.pageCount = Math.ceil(res.body / 5)
             }, function(err) {
                 console.log(err)
             })
+        } else {
+            this.$http.get('http://localhost:8080/article/hotestarticle', {params: {start: 0, end: -1}})
+                .then(res => {
+                    this.pageCount = Math.ceil(res.body.length / 5)
+                })
+        }
         if(this.type === 'hot') {
             this.getAllHotList(0)
         } else {
@@ -125,7 +134,7 @@ export default {
       },
       getArticleAndTag: function(offset) {
         if(this.type === 'new') {
-          this.$http.get('http://localhost:8080/article/newestarticle', {params: {offset: offset, limit: 1}})
+          this.$http.get('http://localhost:8080/article/newestarticle', {params: {offset: offset, limit: 5}})
             .then(function(res) {
                 res.body.forEach(element => {
                         let value = element.date
@@ -157,7 +166,7 @@ export default {
                 console.log(err)
             })
         } else {
-            this.$http.get('http://localhost:8080/article/hotestarticle', {params: {start: offset, end: offset}})
+            this.$http.get('http://localhost:8080/article/hotestarticle', {params: {start: offset, end: offset + 5}})
             .then(function(res) {
                 console.log(res)
                 res.body.forEach(element => {
