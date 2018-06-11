@@ -53,13 +53,19 @@ export default {
           formData.append('description', this.description)
           formData.append('category', this.category)
           formData.append('tags', this.tags)
-          console.log(description)
-          console.log(formData)
           this.$http.post('http://localhost:8080/article/publish', formData)
             .then((res) => {
                 toastr.success("发表成功")
+                this.title = ''
+                this.content = ''
+                this.tags = []
+                this.category = ''
             }, (err) => {
                 toastr.error("无此权限")
+                this.title = ''
+                this.content = ''
+                this.tags = []
+                this.category = ''
             })
       }
   },

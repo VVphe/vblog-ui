@@ -23,25 +23,31 @@ export default {
   name: 'calender',
   data() {
     return {
-
+      events: []
     }
   },
   methods: {
 
   },
   mounted() {
-      
+  
+  let now = new Date()
+  let Y = now.getFullYear()
+  let m = now.getMonth() + 1 < 10 ? '0'+(now.getMonth() + 1) : now.getMonth() + 1
+  let d = now.getDate() < 10 ? '0'+now.getDate() : now.getDate()
+  let today = Y + '-' + m + '-' + d
 
-
-  $(document).ready(function() {
-
-    $('#calendar').fullCalendar({
+  this.$http.get(global.vblogUrl + '/event/events')
+    .then(res => {
+      let that = this
+      this.events = res.body
+      $('#calendar').fullCalendar({
       header: {
         left: 'prev,next today',
         center: 'title',
         right: 'month,agendaWeek,agendaDay'
       },
-      defaultDate: '2018-03-12',
+      defaultDate: today,
       navLinks: true, // can click day/week names to navigate views
       selectable: true,
       selectHelper: true,
@@ -50,83 +56,108 @@ export default {
         var eventData;
         if (title) {
           eventData = {
+            id: (new Date()).valueOf(),
             title: title,
             start: start,
             end: end
           };
+
+          console.log(eventData)
+          
           $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
+
+          $.post(global.vblogUrl + '/event/publish', {"eventid": eventData.id, "eventtitle": title, "start": start.format(), "end": end.format()},
+            function(res) {
+              console.log(res)
+            },"json"
+          )
         }
         $('#calendar').fullCalendar('unselect');
       },
       eventResize: function(event, delta, revertFunc) {
-        alert(event.title + " end is now " + event.end.format());
-        if (!confirm("is this okay?")) {
+        if (!confirm("确定修改?")) {
           revertFunc();
+        } else {
+          $.post(global.vblogUrl + '/event/update', {"eventid": event.id,  "start": event.start.format(), "end": event.end.format()},
+            function(res) {
+              console.log(res)
+            },"json"
+          )
         }
 
       },
       editable: true,
       eventLimit: true, // allow "more" link when too many events
-      events: [
-        {
-          title: 'All Day Event',
-          start: '2018-03-01'
-        },
-        {
-          title: 'Long Event',
-          start: '2018-03-07',
-          end: '2018-03-10'
-        },
-        {
-          id: 999,
-          title: 'Repeating Event',
-          start: '2018-03-09T16:00:00'
-        },
-        {
-          id: 999,
-          title: 'Repeating Event',
-          start: '2018-03-16T16:00:00'
-        },
-        {
-          title: 'Conference',
-          start: '2018-03-11',
-          end: '2018-03-13'
-        },
-        {
-          title: 'Meeting',
-          start: '2018-03-12T10:30:00',
-          end: '2018-03-12T12:30:00'
-        },
-        {
-          title: 'Lunch',
-          start: '2018-03-12T12:00:00',
-          end: '2018-03-12T12:30:00'
-        },
-        {
-          title: 'Meeting',
-          start: '2018-03-12T14:30:00'
-        },
-        {
-          title: 'Happy Hour',
-          start: '2018-03-12T17:30:00'
-        },
-        {
-          title: 'Dinner',
-          start: '2018-03-12T20:00:00'
-        },
-        {
-          title: 'Birthday Party',
-          start: '2018-03-13T07:00:00'
-        },
-        {
-          title: 'Click for Google',
-          url: 'http://google.com/',
-          start: '2018-03-28'
-        }
-      ]
-    });
+      events: this.events,
+      eventClick: function(calEvent, jsEvent, view) {
+        if(confirm("确定完成?")) {
+          $.post(global.vblogUrl + '/event/delete', {"eventid": calEvent.id},
+            function(res) {
+              
+            },"json"
 
-  });
+          )
+          location.reload()
+        }
+      },
+      
+    });
+    })
+
+  //$(document).ready(function() {
+    // $('#calendar').fullCalendar({
+    //   header: {
+    //     left: 'prev,next today',
+    //     center: 'title',
+    //     right: 'month,agendaWeek,agendaDay'
+    //   },
+    //   defaultDate: today,
+    //   navLinks: true, // can click day/week names to navigate views
+    //   selectable: true,
+    //   selectHelper: true,
+    //   select: function(start, end) {
+    //     var title = prompt('Event Title:');
+    //     var eventData;
+    //     if (title) {
+    //       eventData = {
+    //         id: (new Date()).valueOf(),
+    //         title: title,
+    //         start: start,
+    //         end: end
+    //       };
+
+    //       console.log(eventData)
+          
+    //       $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
+
+    //       $.post(global.vblogUrl + '/event/publish', {"eventid": eventData.id, "eventtitle": title, "start": start._i, "end": end._i},
+    //         function(res) {
+    //           console.log(res)
+    //         },"json"
+    //       )
+    //     }
+    //     $('#calendar').fullCalendar('unselect');
+    //   },
+    //   eventResize: function(event, delta, revertFunc) {
+    //     console.log(event)
+    //     alert(event + " end is now " + event.end.format());
+    //     if (!confirm("确定修改?")) {
+    //       revertFunc();
+    //     } else {
+    //       $.post(global.vblogUrl + '/event/update', {"eventid": event.id,  "start": event.start.format(), "end": event.end.format()},
+    //         function(res) {
+    //           console.log(res)
+    //         },"json"
+    //       )
+    //     }
+
+    //   },
+    //   editable: true,
+    //   eventLimit: true, // allow "more" link when too many events
+    //   events: this.events
+    // });
+
+  //});
 
 
 

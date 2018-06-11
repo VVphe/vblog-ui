@@ -21,7 +21,7 @@
                             <div class="mediue text-right">
                                 <h4>Stats:</h4>
                                 <div> <i class="fa fa-comments-o"> </i> {{article.commentsCnt}} </div>
-                                <i class="fa fa-eye"> </i> 144 views
+                                <i class="fa fa-eye"> </i> {{article.readcount}} views
                             </div>
                         </div>
                     </div>
@@ -143,6 +143,14 @@ export default {
                         let m = time.getMonth() + 1
                         let d = time.getDate()
                         element.date = Y + '-' + m + '-' + d
+
+                        element.readcount = 0
+                        this.$http.get('http://localhost:8080/article/readcount', {params: {articleid: element.id}})
+                            .then(res => {
+                                element.readcount = res.body
+                            }, (err => {
+                                console.log(err)
+                            }))
                     }
                 )  
                 this.articles = res.body
@@ -176,6 +184,14 @@ export default {
                         let m = time.getMonth() + 1
                         let d = time.getDate()
                         element.date = Y + '-' + m + '-' + d
+
+                        element.readcount = 0
+                        this.$http.get('http://localhost:8080/article/readcount', {params: {articleid: element.id}})
+                            .then(res => {
+                                element.readcount = res.body
+                            }, (err => {
+                                console.log(err)
+                            }))
                     }
                 )  
                 this.articles = res.body

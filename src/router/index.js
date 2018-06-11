@@ -32,37 +32,37 @@ const routes = [
     component: UserMainPage,
     children: [
       {
-        path: '/categoryarticle/:category',
+        path: 'categoryarticle/:category',
         name: 'CategoryArticlePage',
         component: CategoryArticlePage
       },
       {
-        path: '/article/:articleid',
+        path: 'article/:articleid',
         name: 'ArticleShowPage',
         component: ArticleShowPage
       },
       {
-        path: '/about',
+        path: 'about',
         name: 'AboutmePage',
         component: AboutmePage
       },
       {
-        path: '/outline',
+        path: 'outline',
         name: 'OutlinePage',
         component: OutlinePage
       },
       {
-        path: '/articlelist',
+        path: 'articlelist',
         name: 'ArticleListPage',
         component: ArticleListPage
       },
       {
-        path: '/edit',
+        path: 'edit',
         name: 'EditPage',
         component: EditPage
       },
       {
-        path: '/todo',
+        path: 'todo',
         name: 'TodoPage',
         component: TodoPage
       }

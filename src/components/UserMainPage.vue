@@ -160,7 +160,6 @@ export default {
             this.$http.get(global.vblogUrl + '/article/categorycnt', {params: {category: category}})
                 .then(res => {
                     this.categoryData[category] = res.body
-                    console.log(this.categoryData)
                 })
         })
     }
