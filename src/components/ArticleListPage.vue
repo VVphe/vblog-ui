@@ -218,12 +218,18 @@ export default {
       },
       goThisArticle: function(articleid) {
           let tags = this.tags.filter(tag => tag.articleid === articleid)
-          this.$router.push({name: 'ArticleShowPage', params: {articleid: articleid, tags: tags[0].articleTag}})
+          this.$router.push({name: 'ArticleShowPage', params: {articleid: articleid, tags: tags[0].articleTag, type: this.type}})
       }
   },
   mounted() {
-    this.type = this.$route.params.type
-    console.log(this.type)
+    if(this.$store.state.listType.type === "") {
+        let type = this.$route.params.type
+        this.$store.commit('SET_TYPE', { type })
+    } else if (this.$store.state.listType.type != this.$route.params.type && this.$route.params.type != undefined) {
+        let type = this.$route.params.type
+        this.$store.commit('SET_TYPE', { type })
+    }
+    this.type = this.$store.state.listType.type
     this.initArticle()
   }
 }

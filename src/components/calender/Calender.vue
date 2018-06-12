@@ -62,15 +62,26 @@ export default {
             end: end
           };
 
-          console.log(eventData)
-          
-          $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
-
-          $.post(global.vblogUrl + '/event/publish', {"eventid": eventData.id, "eventtitle": title, "start": start.format(), "end": end.format()},
-            function(res) {
+          $.ajax({
+            type: 'post',
+            headers: {
+              "Authorization": window.localStorage.getItem('token')
+            },
+            url: global.vblogUrl + '/event/publish',
+            data: {
+              "eventid": eventData.id, 
+              "eventtitle": title, 
+              "start": start.format(), 
+              "end": end.format()
+            },
+            success: function(res) {
               console.log(res)
-            },"json"
-          )
+              $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
+            },
+            error: function() {
+              toastr.error("无此权限")
+            }
+          })
         }
         $('#calendar').fullCalendar('unselect');
       },
@@ -78,11 +89,24 @@ export default {
         if (!confirm("确定修改?")) {
           revertFunc();
         } else {
-          $.post(global.vblogUrl + '/event/update', {"eventid": event.id,  "start": event.start.format(), "end": event.end.format()},
-            function(res) {
-              console.log(res)
-            },"json"
-          )
+          $.ajax({
+            type: 'post',
+            headers: {
+              "Authorization": window.localStorage.getItem('token')
+            },
+            url: global.vblogUrl + '/event/update',
+            data: {
+              "eventid": event.id,  
+              "start": event.start.format(), 
+              "end": event.end.format()
+            },
+            success: function(res) {
+              toastr.success("修改成功")
+            },
+            error: function() {
+              toastr.error("无此权限")
+            }
+          })
         }
 
       },
@@ -91,13 +115,22 @@ export default {
       events: this.events,
       eventClick: function(calEvent, jsEvent, view) {
         if(confirm("确定完成?")) {
-          $.post(global.vblogUrl + '/event/delete', {"eventid": calEvent.id},
-            function(res) {
-              
-            },"json"
-
-          )
-          location.reload()
+          $.ajax({
+            type: 'post',
+            headers: {
+              "Authorization": window.localStorage.getItem('token')
+            },
+            url: global.vblogUrl + '/event/delete',
+            data: {
+              "eventid": calEvent.id
+            },
+            success: function(res) {
+              location.reload()
+            },
+            error: function() {
+              toastr.error("无此权限")
+            }
+          })
         }
       },
       

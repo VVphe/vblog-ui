@@ -11,6 +11,7 @@ import TodoPage from '../components/TodoPage'
 import LoginPage from '../components/LoginPage'
 import RegisterPage from '../components/RegisterPage'
 import UserMainPage from '../components/UserMainPage'
+
 import VueRouter from 'vue-router';
 
 Vue.use(Router)
@@ -77,10 +78,10 @@ const router = new VueRouter({
 
 router.beforeEach(((to, from, next) => {
   let token = window.localStorage.getItem('token')
-  if (to.matched.some(record => record.meta.requiresAuth) && (!token || token === null)) {
+  if (to.fullPath != '/login' && token === null) {
     next({
       name: 'LoginPage',
-      query: { redirect: to.fullPath }
+      //query: { redirect: to.fullPath }
     })
   } else {
     next()

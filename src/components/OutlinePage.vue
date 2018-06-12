@@ -96,7 +96,6 @@ export default {
                         element.readcount = 0
                         this.$http.get('http://localhost:8080/article/readcount', {params: {articleid: element.id}})
                             .then(res => {
-                                console.log(res.body)
                                 element.readcount = res.body
                             }, (err => {
                                 console.log(err)

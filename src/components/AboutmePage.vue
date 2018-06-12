@@ -10,7 +10,7 @@
                         <div>
                             <div class="ibox-content ">
                                 <h4><strong>vv</strong></h4>
-                                <p><i class="fa fa-map-marker"></i> Riviera State 32/106</p>
+                                <p><i class="fa fa-map-marker"></i> Shanghai Jiading</p>
                                 <h5>
                                     About me
                                 </h5>
