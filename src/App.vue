@@ -1,7 +1,5 @@
 <template>
-  <div class="pace-done">
     <router-view></router-view>
-  </div>
 </template>
 
 <script>
