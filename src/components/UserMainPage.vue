@@ -4,12 +4,12 @@
   <!--</div>-->
   <div id="usermainpage">
 
-    <nav class="navbar-default navbar-static-side" role="navigation">
+    <nav class="navbar navbar-default navbar-static-side" role="navigation">
       <div class="sidebar-collapse">
-        <ul class="nav metismenu" id="side-menu">
+        <ul class="nav " id="side-menu">
           <li class="nav-header">
             <div class="dropdown profile-element">
-              <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+              <a data-toggle="dropdown" class="dropdown-toggle">
               <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{username}}</strong>
                 </span> <span class="text-muted text-xs block">{{role}}<b class="caret"></b></span> </span> </a>
               <ul class="dropdown-menu animated fadeInRight m-t-xs">
@@ -26,9 +26,9 @@
           <li :class="{ active:isArticlePage }" @click="goMyArticles">
             <a><i class="fa fa-pencil"></i> <span class="nav-label">我的文章</span></a>
           </li>
-          <li :class="{ active:isCategoryPage }">
-              <a><i class="fa fa-edit"></i> <span class="nav-label">个人分类</span><span class="fa arrow"></span></a>
-              <ul class="nav nav-second-level collapse in">
+          <li :class="{ active:isCategoryPage }" @click="goCategory">
+              <a @click="collapseUl"><i class="fa fa-edit"></i> <span class="nav-label">个人分类</span><span class="fa arrow"></span></a>
+              <ul class="nav nav-second-level collapse" :class="{in: isCategoryPage}">
                   <!-- <li :class="{ active:isJava }"> <a @click="goArticles('Java')">Java ({{categoryData["Java"]}})</a></li>
                   <li :class="{ active:isPython }"><a @click="goArticles('Python')">Python ({{categoryData["Python"]}})</a></li>
                   <li :class="{ active:isNodejs }"><a @click="goArticles('Nodejs')">Nodejs ({{categoryData["Nodejs"]}})</a></li>
@@ -49,9 +49,6 @@
           <li :class="{ active:isContactPage }">
             <a><i class="fa fa-heart"></i> <span class="nav-label">联系博主</span> </a>
           </li>
-          <!-- <li>
-            <a @click="showItemDataPage"><i class="fa fa-th-large"></i> <span class="nav-label">Minor view</span> </a>
-          </li> -->
 
         </ul>
 
@@ -62,7 +59,7 @@
       <div class="row border-bottom">
         <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
           <div class="navbar-header">
-            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary "><i class="fa fa-bars"></i> </a>
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " @click="minBar"><i class="fa fa-bars"></i> </a>
             <form role="search" class="navbar-form-custom" method="post">
               <div class="form-group">
                 <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
@@ -115,6 +112,8 @@ export default {
       isMongodb: false,
       isMysql: false,
 
+      isCollapse: false,
+
       categoryData: {},
       username: '',
       role: ''
@@ -137,6 +136,13 @@ export default {
       this.isContactPage = false
       this.$router.push({name: 'OutlinePage'})
     },
+    goCategory: function() {
+      this.isAboutmePage = false
+      this.isArticlePage = false
+      this.isCategoryPage = !this.isCategoryPage
+      this.isTodoPage = false
+      this.isContactPage = false
+    },
     goArticles: function(lang) {
       let $ = this
       this.isAboutmePage = false
@@ -153,6 +159,14 @@ export default {
       this.isTodoPage = true
       this.isContactPage = false
       this.$router.push({name: 'TodoPage'})
+    },
+    minBar: function() {
+      $("body").toggleClass("mini-navbar");
+        SmoothlyMenu();
+    },
+    collapseUl: function() {
+      this.isCollapse = !this.isCollapse
+
     },
     getCategoryArticleCnt: function() {
         var categorys = ['Java', 'Python', 'Nodejs', 'Javascript', 'Mongodb', 'Mysql']

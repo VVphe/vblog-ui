@@ -18,6 +18,10 @@ Vue.use(Router)
 
 const routes = [
   {
+    path: '/', 
+    redirect: '/login'
+  },
+  {
     path: '/login',
     name: 'LoginPage',
     component: LoginPage
@@ -78,6 +82,7 @@ const router = new VueRouter({
 
 router.beforeEach(((to, from, next) => {
   let token = window.localStorage.getItem('token')
+  console.log(token)
   if (to.fullPath != '/login' && token === null) {
     next({
       name: 'LoginPage',

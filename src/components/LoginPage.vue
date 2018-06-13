@@ -63,10 +63,10 @@ export default {
             .then(res => {
                 window.localStorage.setItem('token', res.bodyText)
                 window.localStorage.setItem('user', this.username)
-                this.$router.push({name: 'AboutmePage'})
+                this.$router.push('/main/about')
                 toastr.success("登录成功")
             }, err => {
-                toastr.success("登录失败")
+                toastr.error("登录失败")
             })
 
           

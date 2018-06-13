@@ -47,14 +47,22 @@
                         
                         <div>
                             <div class="ibox-content">
-                                <div class=" rt-btn" v-if="showLine">
+                                <div class=" rt-btn">
+                                <div  v-if="showLine">
                                     <button class="btn btn-default dim" type="button" @click="turnToPie"><i class="fa fa-arrow-circle-left"></i></button>
+                                </div>
+                                <div  v-if="showLine&&showLine_Line">
+                                    <button class="btn btn-default dim" type="button" @click="turnToLine"><i class="fa fa-line-chart"></i></button>
+                                </div>
+                                <div  v-if="showLine&&showLine_Bar">
+                                    <button class="btn btn-default dim" type="button" @click="turnToBar"><i class="fa fa-bar-chart"></i></button>
+                                </div>
                                 </div>
                                 <div v-if="showPie"> 
                                     <eChart :options="pieOption" @click="handlePieClick"></eChart>
                                 </div>
                                 <div v-if="showLine" style="width: 5px"> 
-                                    <eChart :options="lineOption"></eChart>
+                                    <eChart :options="lineOption" name="myChart"></eChart>
                                 </div>
                             </div>
                         </div>
@@ -123,6 +131,8 @@ export default {
     return {
         showPie: true,
         showLine: false,
+        showLine_Line: false,
+        showLine_Bar: false,
         categoryData: [],
         pieOption: {
             tooltip : {
@@ -195,6 +205,9 @@ export default {
                 }
                 this.showPie = false
                 this.showLine = true
+                this.showLine_Bar = true
+                this.lineOption.series.type = 'line'
+
                 this.lineOption.title.text = category
                 this.lineOption.series.name = category
                 this.lineOption.series.data = finalData
@@ -203,8 +216,22 @@ export default {
             })
     },
     turnToPie: function() {
-        this.showPie = true
         this.showLine = false
+        this.showPie = true
+        this.showLine_Line = false
+        this.showLine_Bar = false
+    },
+    turnToLine: function() {
+        this.showPie = false
+        this.showLine_Line = false
+        this.showLine_Bar = true
+        this.lineOption.series.type = 'line'
+    },
+    turnToBar: function() {
+        this.showPie = false
+        this.showLine_Line = true
+        this.showLine_Bar = false
+        this.lineOption.series.type = 'bar'
     },
 
     getArticleCount: function() {
