@@ -59,35 +59,6 @@ export default {
           this.getArticleAndTag(offset)
       },
       getAllNewList: function(offset) {
-        //   this.$http.get('http://localhost:8080/article/newestarticle', {params: {offset: offset, limit: 1}})
-        //     .then(function(res) {
-        //         res.body.forEach(element => {
-        //                 let value = element.date
-        //                 let time = new Date(value)
-        //                 let Y = time.getFullYear()
-        //                 let m = time.getMonth() + 1
-        //                 let d = time.getDate()
-        //                 element.date = Y + '-' + m + '-' + d
-        //             }
-        //         )  
-        //         this.articles = res.body
-        //         this.articles.tag = []
-        //         this.articles.forEach(article => {
-        //             this.$http.get('http://localhost:8080/tag/articletag', {params: {'articleid': article.id}})
-        //             .then(function(res) {
-        //                 //console.log(res)
-        //                 this.tags.push({
-        //                     articleid: article.id,
-        //                     articleTag: res.body
-        //                 })
-        //             }, function(err) {
-        //                 console.log(err)
-        //             })
-        //         })
-                
-        //     }, function(err) {
-        //         console.log(err)
-        //     })
         this.getArticleAndTag(offset)
       },
       goPage: function(pageid) {
@@ -95,22 +66,7 @@ export default {
           this.selectPage = pageid
 
           let offset = (pageid - 1) * 1
-        //   this.$http.get('http://localhost:8080/article/newestarticle', {params: {offset: offset, limit: 1}})
-        //     .then(function(res) {
-        //         res.body.forEach(element => {
-        //                 let value = element.date
-        //                 let time = new Date(value)
-        //                 let Y = time.getFullYear()
-        //                 let m = time.getMonth() + 1
-        //                 let d = time.getDate()
-        //                 element.date = Y + '-' + m + '-' + d
-        //             }
-        //         )  
-        //         this.articles = res.body
-        //     }, function(err) {
-        //         console.log(err)
-        //     })
-            this.getArticleAndTag(offset)
+          this.getArticleAndTag(offset)
       },
       initArticle: function() {
         if(this.type == 'new') {
@@ -142,7 +98,13 @@ export default {
                         let Y = time.getFullYear()
                         let m = time.getMonth() + 1
                         let d = time.getDate()
-                        element.date = Y + '-' + m + '-' + d
+                        let h = time.getHours()
+                        let M = time.getMinutes()
+                        let s = time.getSeconds()
+                        if(h < 10) h = '0' + h
+                        if(M < 10) M = '0' + M
+                        if(s < 10) s = '0' + s
+                        element.date = Y + '-' + m + '-' + d + ' ' + h + ':' + M + ':' + s
 
                         element.readcount = 0
                         this.$http.get('http://localhost:8080/article/readcount', {params: {articleid: element.id}})
@@ -183,7 +145,13 @@ export default {
                         let Y = time.getFullYear()
                         let m = time.getMonth() + 1
                         let d = time.getDate()
-                        element.date = Y + '-' + m + '-' + d
+                        let h = time.getHours()
+                        let M = time.getMinutes()
+                        let s = time.getSeconds()
+                        if(h < 10) h = '0' + h
+                        if(M < 10) M = '0' + M
+                        if(s < 10) s = '0' + s
+                        element.date = Y + '-' + m + '-' + d + ' ' + h + ':' + M + ':' + s
 
                         element.readcount = 0
                         this.$http.get('http://localhost:8080/article/readcount', {params: {articleid: element.id}})

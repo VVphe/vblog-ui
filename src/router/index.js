@@ -11,6 +11,7 @@ import TodoPage from '../components/TodoPage'
 import LoginPage from '../components/LoginPage'
 import RegisterPage from '../components/RegisterPage'
 import UserMainPage from '../components/UserMainPage'
+import SearchPage from '../components/SearchPage'
 
 import VueRouter from 'vue-router';
 
@@ -70,6 +71,12 @@ const routes = [
         path: 'todo',
         name: 'TodoPage',
         component: TodoPage
+      },
+      {
+        path: 'search/:key',
+        name: 'SearchPage',
+        canReuse: false,
+        component: SearchPage
       }
     ]
   },

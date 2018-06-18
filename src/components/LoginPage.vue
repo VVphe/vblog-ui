@@ -61,10 +61,17 @@ export default {
           formData.append('password', this.password)
           this.$http.post(global.vblogUrl + '/login', formData)
             .then(res => {
-                window.localStorage.setItem('token', res.bodyText)
-                window.localStorage.setItem('user', this.username)
-                this.$router.push('/main/about')
-                toastr.success("登录成功")
+                console.log(res)
+                if(res.bodyText === 'Error Password') {
+                    toastr.error("密码错误")
+                } else if(res.bodyText === 'Not Found') {
+                    toastr.error("无此账户")
+                } else {
+                    window.localStorage.setItem('token', res.bodyText)
+                    window.localStorage.setItem('user', this.username)
+                    this.$router.push('/main/about')
+                    toastr.success("登录成功")
+                }
             }, err => {
                 toastr.error("登录失败")
             })
@@ -77,7 +84,7 @@ export default {
       }
   },
   mounted() {
-
+      
   }
 }
 </script>

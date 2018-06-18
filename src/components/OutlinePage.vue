@@ -82,7 +82,7 @@ export default {
           this.$router.push({name: 'ArticleListPage', params: {type: type}})
       },
       getHotestArticle: function() {
-        this.$http.get('http://localhost:8080/article/hotestarticle', {params: {start: 0, end: 9}})
+        this.$http.get('http://localhost:8080/article/hotestarticle', {params: {start: 0, end: 10}})
             .then(function(res) {
                 console.log(res)
                 res.body.forEach(element => {
@@ -91,7 +91,13 @@ export default {
                         let Y = time.getFullYear()
                         let m = time.getMonth() + 1
                         let d = time.getDate()
-                        element.date = Y + '-' + m + '-' + d
+                        let h = time.getHours()
+                        let M = time.getMinutes()
+                        let s = time.getSeconds()
+                        if(h < 10) h = '0' + h
+                        if(M < 10) M = '0' + M
+                        if(s < 10) s = '0' + s
+                        element.date = Y + '-' + m + '-' + d + ' ' + h + ':' + M + ':' + s
 
                         element.readcount = 0
                         this.$http.get('http://localhost:8080/article/readcount', {params: {articleid: element.id}})
@@ -117,7 +123,13 @@ export default {
                         let Y = time.getFullYear()
                         let m = time.getMonth() + 1
                         let d = time.getDate()
-                        element.date = Y + '-' + m + '-' + d
+                        let h = time.getHours()
+                        let M = time.getMinutes()
+                        let s = time.getSeconds()
+                        if(h < 10) h = '0' + h
+                        if(M < 10) M = '0' + M
+                        if(s < 10) s = '0' + s
+                        element.date = Y + '-' + m + '-' + d + ' ' + h + ':' + M + ':' + s
 
                         element.readcount = 0
                         this.$http.get('http://localhost:8080/article/readcount', {params: {articleid: element.id}})

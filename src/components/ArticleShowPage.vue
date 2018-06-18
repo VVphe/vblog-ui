@@ -13,6 +13,10 @@
                             </div>
                             <div v-html="article.content"></div>
                             <hr>
+                            <div class="delete-btn">
+                                <button type="button" class="btn btn-w-m btn-danger" @click="deleteArticle">Delete</button>
+                            </div>
+                            <hr>
                             <div class="row">
                                 <div class="col-md-6">
                                         <h5>Tags:</h5>
@@ -314,7 +318,25 @@ export default {
             }, err => {
                 console.log(err)
             })
-      }
+      },
+
+      deleteArticle: function() {
+          this.$confirm('此操作将永久删除文章, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$http.get(global.vblogUrl + '/article/delete', {params: {id: this.article.id}})
+                .then(res => {
+                    this.$router.push({name: 'OutlinePage'})
+                    toastr.success("删除成功")  
+                }, err => {
+                    toastr.error("无此权限")
+                })
+            }).catch(() => {
+                toastr.success("已取消")      
+            });
+        }
   },
   mounted() {
     //   this.article = this.$route.params.article[0]
@@ -331,7 +353,13 @@ export default {
             let Y = time.getFullYear()
             let m = time.getMonth() + 1
             let d = time.getDate()
-            resp.body.date =  Y + '-' + m + '-' + d
+            let h = time.getHours()
+            let M = time.getMinutes()
+            let s = time.getSeconds()
+            if(h < 10) h = '0' + h
+            if(M < 10) M = '0' + M
+            if(s < 10) s = '0' + s
+            resp.body.date =  Y + '-' + m + '-' + d + ' ' + h + ':' + M + ':' + s
 
             resp.body.readcount = 0
 
@@ -409,5 +437,10 @@ export default {
 }
 .btn-gp {
     margin-top: 5px
+}
+.delete-btn {
+    display: flex;
+    justify-content: flex-end;
+    
 }
 </style>

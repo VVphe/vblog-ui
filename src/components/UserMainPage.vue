@@ -60,11 +60,13 @@
         <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
           <div class="navbar-header">
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " @click="minBar"><i class="fa fa-bars"></i> </a>
-            <form role="search" class="navbar-form-custom" method="post">
-              <div class="form-group">
-                <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
+            <!-- <form role="search" class="navbar-form-custom" method="post"> -->
+              <div class="navbar-form-custom">
+                <div class="form-group">
+                  <input type="search" placeholder="Search for something..." class="form-control" name="top-search" id="top-search" @keyup.enter="searchEnter" v-model="searchKey">
+                </div>
               </div>
-            </form>
+            <!-- </form> -->
           </div>
           <ul class="nav navbar-top-links navbar-right">
             <li>
@@ -116,7 +118,9 @@ export default {
 
       categoryData: {},
       username: '',
-      role: ''
+      role: '',
+
+      searchKey: ''
     }
   },
   methods: {
@@ -160,6 +164,8 @@ export default {
       this.isContactPage = false
       this.$router.push({name: 'TodoPage'})
     },
+
+    // modify css
     minBar: function() {
       $("body").toggleClass("mini-navbar");
         SmoothlyMenu();
@@ -168,6 +174,8 @@ export default {
       this.isCollapse = !this.isCollapse
 
     },
+
+    //
     getCategoryArticleCnt: function() {
         var categorys = ['Java', 'Python', 'Nodejs', 'Javascript', 'Mongodb', 'Mysql']
         categorys.forEach(category => {
@@ -177,9 +185,20 @@ export default {
                 })
         })
     },
+
+    //
     logout: function() {
       this.$router.push({name: 'LoginPage'})
       window.localStorage.clear()
+    },
+
+    // search articles
+    searchEnter: function(e) {
+      var keyCode = window.event ? e.keyCode : e.which
+      if(keyCode == 13 && this.searchKey) {
+          // this.$router.push({name: 'SearchPage', params: {key: this.searchKey}})
+          this.$router.push({path: '/main/search/' + this.searchKey})
+      }
     }
   },
   mounted() {
