@@ -90,7 +90,7 @@ const router = new VueRouter({
 router.beforeEach(((to, from, next) => {
   let token = window.localStorage.getItem('token')
   console.log(token)
-  if (to.fullPath != '/login' && token === null) {
+  if (to.fullPath != '/login' && to.fullPath != '/register' && token === null) {
     next({
       name: 'LoginPage',
       //query: { redirect: to.fullPath }

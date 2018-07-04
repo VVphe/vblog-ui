@@ -190,7 +190,7 @@ export default {
       getComments: function() {
           this.$http.get('http://localhost:8080/comment/page', {params: {
                 articleid: this.$route.params.articleid,
-                limit: this.pageCnt * 2
+                limit: this.pageCnt * 4
               }
             })
             .then(function(res) {

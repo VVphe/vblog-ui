@@ -122,24 +122,28 @@ export default {
       eventClick: function(calEvent, jsEvent, view) {
         let that = this
         if(confirm("确定完成?")) {
-          $.ajax({
-            type: 'post',
-            headers: {
-              "Authorization": window.localStorage.getItem('token')
-            },
-            url: global.vblogUrl + '/event/delete',
-            data: {
-              "eventid": calEvent.id
-            },
-            success: function(res) {
-              location.reload()
-              // console.log($(that))
-              // $(that).css('border-color', 'red')
-            },
-            error: function() {
-              toastr.error("无此权限")
-            }
-          })
+          if(calEvent.title.indexOf('finish') != -1) {
+            toastr.error("已完成任务无法更改状态")
+          } else {
+            $.ajax({
+              type: 'post',
+              headers: {
+                "Authorization": window.localStorage.getItem('token')
+              },
+              url: global.vblogUrl + '/event/delete',
+              data: {
+                "eventid": calEvent.id
+              },
+              success: function(res) {
+                location.reload()
+                // console.log($(that))
+                // $(that).css('border-color', 'red')
+              },
+              error: function() {
+                toastr.error("无此权限")
+              }
+            })
+          }
         }
       },
       

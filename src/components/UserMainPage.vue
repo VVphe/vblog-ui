@@ -101,7 +101,7 @@ export default {
 
   data() {
     return {
-      isAboutmePage: true,
+      isAboutmePage: false,
       isArticlePage: false,
       isCategoryPage: false,
       isTodoPage: false,
@@ -168,7 +168,7 @@ export default {
     // modify css
     minBar: function() {
       $("body").toggleClass("mini-navbar");
-        SmoothlyMenu();
+      SmoothlyMenu();
     },
     collapseUl: function() {
       this.isCollapse = !this.isCollapse
@@ -199,10 +199,28 @@ export default {
           // this.$router.push({name: 'SearchPage', params: {key: this.searchKey}})
           this.$router.push({path: '/main/search/' + this.searchKey})
       }
+    },
+
+    //
+    sliderCss: function() {
+      console.log(this.$route.path)
+      switch(this.$route.path) {
+        case '/main/about': 
+          this.isAboutmePage = true
+          break
+        case '/main/outline': 
+          this.isArticlePage = true
+          break
+        case '/main/todo': 
+          this.isTodoPage = true
+          break
+      }
     }
   },
   mounted() {
       //location.reload()
+      this.sliderCss()
+
       this.getCategoryArticleCnt()
       this.username = window.localStorage.getItem('user')
       if(this.username == 'vv') this.role = 'Manager'

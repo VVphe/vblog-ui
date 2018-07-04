@@ -82,7 +82,7 @@ export default {
           this.$router.push({name: 'ArticleListPage', params: {type: type}})
       },
       getHotestArticle: function() {
-        this.$http.get('http://localhost:8080/article/hotestarticle', {params: {start: 0, end: 10}})
+        this.$http.get('http://localhost:8080/article/hotestarticle', {params: {start: 0, end: 14}})
             .then(function(res) {
                 console.log(res)
                 res.body.forEach(element => {
